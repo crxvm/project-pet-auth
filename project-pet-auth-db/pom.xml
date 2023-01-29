@@ -12,6 +12,20 @@
 
     <artifactId>project-pet-auth-db</artifactId>
 
+    <properties>
+        <!-- liquibase -->
+        <liquibase-plugin.version>3.6.1</liquibase-plugin.version>
+        <liquibase.changelog>auth_db_changelog.xml</liquibase.changelog>
+        <liquibase.host>localhost</liquibase.host>
+        <liquibase.port>5432</liquibase.port>
+        <liquibase.db>project-pet</liquibase.db>
+        <liquibase.schema>auth</liquibase.schema>
+        <liquibase.user>auth</liquibase.user>
+        <liquibase.password>auth</liquibase.password>
+        <timestamp>${maven.build.timestamp}</timestamp>
+        <maven.build.timestamp.format>yyyyMMdd-HHmmssSSS</maven.build.timestamp.format>
+    </properties>
+
     <dependencies>
         <!--DB-->
         <dependency>
@@ -19,6 +33,31 @@
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+        </dependency>
     </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.liquibase</groupId>
+                <artifactId>liquibase-maven-plugin</artifactId>
+                <version>${liquibase-plugin.version}</version>
+                <configuration>
+                    <outputFileEncoding>UTF-8</outputFileEncoding>
+                    <driver>org.postgresql.Driver</driver>
+                    <url>
+                        jdbc:postgresql://${liquibase.host}:${liquibase.port}/${liquibase.db}?currentSchema=${liquibase.schema}
+                    </url>
+                    <username>${liquibase.user}</username>
+                    <password>${liquibase.password}</password>
+                    <changeLogFile>${liquibase.changelog}</changeLogFile>
+                    <changelogSchemaName>${liquibase.schema}</changelogSchemaName>
+                    <promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

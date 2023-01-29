@@ -1,17 +1,41 @@
-server:
-  port: ${EXPOSED_PORT:8080}
-
 spring:
-  datasource:
-    url: jdbc:h2:mem:mydb
-    username: sa
-    password: password
-    driverClassName: org.h2.Driver
+
   jpa:
-    spring.jpa.database-platform: org.hibernate.dialect.H2Dialect
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyComponentPathImpl
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      default_schema: auth
+
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/project-pet?currentSchema=auth
+    username: auth
+    password: auth
+    hikari:
+      connectionTimeout: 10000
+      maximumPoolSize: 50
+      idleTimeout: 60000
+      maxLifetime: 3600000
+      minimumIdle: 2
+    tomcat:
+      max-idle: 2
+      min-idle: 2
+
+  liquibase:
+    enabled: true
+    drop-first: false
+    parameters:
+      schema: auth
+    default-schema: ${spring.liquibase.parameters.schema}
+    liquibase-schema: ${spring.liquibase.parameters.schema}
+    change-log: classpath:auth_db_changelog.xml
 
 logging:
   level:
     ROOT: INFO
     org.springframework: INFO
-    org.hibernate.type: INFO
+    org.hibernate.type: TRACE

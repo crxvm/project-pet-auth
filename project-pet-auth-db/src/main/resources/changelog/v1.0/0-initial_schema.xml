@@ -1,0 +1,34 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <property name="author" value="Dobaev Arseniy"/>
+    <property name="changeset" value="0-initial_schema" global="false"/>
+    <property name="table" value="metadata" global="false"/>
+
+    <changeSet id="${changeset}:${table}:0" author="${author}">
+        <createTable tableName="${prefix}_${table}" remarks="Метаданные о сервисе">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(250)" remarks="Название параметра">
+                <constraints nullable="false"/>
+            </column>
+            <column name="value" type="VARCHAR(4000)" remarks="Значение параметра">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="${changeset}:${table}:1" author="${author}">
+        <addPrimaryKey columnNames="id" constraintName="${prefix}_${table}_pk" tableName="${prefix}_${table}"/>
+    </changeSet>
+
+    <changeSet id="${changeset}:${table}:2" author="${author}">
+        <createSequence sequenceName="${prefix}_${table}_id_seq" startValue="1"/>
+    </changeSet>
+
+</databaseChangeLog>
